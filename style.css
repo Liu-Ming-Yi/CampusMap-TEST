@@ -1,0 +1,165 @@
+/* --- 核心變數 --- */
+:root {
+    --tech-blue: #007bff;
+    --neon-glow: rgba(0, 123, 255, 0.5);
+    --glass-bg: rgba(255, 255, 255, 0.8);
+    --bg-color: #f0f2f5;
+    --text-main: #2c3e50;
+    --card-bg: #ffffff;
+    --border-color: #e2e8f0;
+    --table-head: #f8fafc;
+}
+
+body.dark-mode {
+    --bg-color: #121212;
+    --text-main: #e2e8f0;
+    --glass-bg: rgba(30, 30, 30, 0.9);
+    --card-bg: #1e1e1e;
+    --border-color: #333;
+    --table-head: #252525;
+    --neon-glow: rgba(0, 123, 255, 0.3);
+}
+
+body { 
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+    margin: 0; padding: 0; 
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 捲軸樣式 */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--tech-blue); }
+
+.main-content-wrapper { max-width: 1200px; padding: 0 20px; margin: 20px auto; }
+
+/* 頂部列 */
+.header-bar { 
+    display: flex; justify-content: space-between; align-items: center; 
+    margin-bottom: 20px; padding: 15px;
+    background: var(--glass-bg); backdrop-filter: blur(10px);
+    border-radius: 12px; border: 1px solid var(--border-color);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+.header-bar h1 { font-size: 1.4rem; margin: 0; color: var(--text-main); letter-spacing: 1px; }
+
+.stat-tag { 
+    background: var(--card-bg); padding: 6px 14px; border-radius: 8px; 
+    font-size: 0.85rem; border: 1px solid var(--border-color);
+    color: var(--text-main); display: flex; align-items: center; justify-content: center;
+}
+
+#theme-toggle, #lang-toggle { 
+    cursor: pointer; font-size: 1.2rem; width: 42px; height: 42px;
+    border-radius: 50%; background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+#theme-toggle:hover, #lang-toggle:hover { border-color: var(--tech-blue); box-shadow: 0 0 12px var(--neon-glow); transform: scale(1.1); }
+#lang-toggle { font-size: 0.85rem; font-weight: bold; color: var(--tech-blue); }
+
+/* 搜尋欄位 */
+.search-bar { margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+.search-bar input, .search-bar select { 
+    padding: 10px 15px; border-radius: 8px; border: 1px solid var(--border-color); 
+    background: var(--card-bg); color: var(--text-main); outline: none; transition: 0.3s;
+}
+.search-bar input:focus { border-color: var(--tech-blue); box-shadow: 0 0 0 3px var(--neon-glow); }
+.search-bar button { 
+    padding: 10px 20px; border-radius: 8px; border: none; 
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white; cursor: pointer; font-weight: 600; transition: 0.3s;
+}
+
+/* 表格主體 */
+.table-container { 
+    width: 100%; background: var(--card-bg); 
+    border-radius: 12px; border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.03); overflow: hidden;
+}
+table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+th, td { text-align: center; vertical-align: middle; padding: 15px 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+th { 
+    background: var(--table-head); color: var(--text-main); font-weight: 600; 
+    font-size: 0.75rem; letter-spacing: 0.05em; border-bottom: 2px solid var(--border-color);
+    cursor: pointer;
+}
+
+/* 排序指標 */
+.sort-indicator { display: inline-flex; flex-direction: column; vertical-align: 3px; margin-left: 6px; line-height: 0.6; }
+.sort-arrow { color: #cbd5e0; font-size: 0.7rem; }
+.active-asc .arrow-up { color: var(--tech-blue); }
+.active-desc .arrow-down { color: var(--tech-blue); }
+
+td { border-bottom: 1px solid var(--border-color); font-size: 0.9rem; color: var(--text-main); }
+.highlight-row { background-color: rgba(0, 123, 255, 0.1) !important; box-shadow: inset 4px 0 0 var(--tech-blue); }
+td a { color: var(--tech-blue); text-decoration: none; font-weight: 500; }
+
+#back-to-top {
+    display: none; position: fixed; bottom: 30px; right: 30px; 
+    width: 50px; height: 50px; background: rgba(26, 32, 44, 0.9);
+    border-radius: 12px; color: #00f2fe; z-index: 1000; align-items: center; justify-content: center;
+}
+#back-to-top.show { display: flex; }
+
+/* --- 手機版 RWD 特殊處理 --- */
+@media screen and (max-width: 768px) {
+    .header-bar { flex-direction: column; gap: 10px; }
+    .search-bar { flex-direction: column; }
+    .search-bar input, .search-bar select, .search-bar button { width: 100%; }
+
+    /* 隱藏桌機表頭 */
+    thead { display: none; }
+
+    /* 每一列變成卡片 */
+    #space-tbody tr {
+        display: block;
+        margin-bottom: 15px;
+        padding: 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        background: var(--card-bg);
+        cursor: pointer;
+    }
+
+    /* 初始只顯示 SpaceNo 與 SpaceName */
+    #space-tbody td {
+        display: none; 
+        justify-content: space-between;
+        padding: 12px 8px;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        text-align: right;
+        white-space: normal; /* 手機版內容允許換行 */
+    }
+
+    /* 顯示欄位名稱標籤 */
+    #space-tbody td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #888;
+        float: left;
+    }
+
+    /* 預設顯示的兩個欄位 (關鍵設定) */
+    #space-tbody td:nth-child(1), /* SpaceNo */
+    #space-tbody td:nth-child(2)  /* SpaceName */ {
+        display: flex;
+        font-weight: bold;
+    }
+
+    /* 當點擊展開時顯示其餘所有欄位 */
+    #space-tbody tr.expanded td {
+        display: flex;
+    }
+
+    /* 隱藏不需要的 PicNo */
+    #space-tbody td[data-label="圖號"], 
+    #space-tbody td[data-label="Pic ID"] {
+        display: none !important;
+    }
+}
