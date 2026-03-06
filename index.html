@@ -26,7 +26,7 @@
             --border-color: #333;
             --table-head: #252525;
             --neon-glow: rgba(255, 140, 0, 0.6);
-	    --tech-blue: #ff8400;
+            --tech-blue: #ff8400;
         }
 
         body { 
@@ -129,11 +129,11 @@
             border-bottom: 1px solid var(--tech-blue);
         }
 
-	body.dark-mode #back-to-top {
-	    background: #cfc9be;   /* 夜間模式背景色 */
-	    color: #ff0d01;        /* 箭頭顏色 */
-  	    border: 1px solid #3b82f6;
-	}
+        body.dark-mode #back-to-top {
+            background: #cfc9be;
+            color: #ff0d01;
+            border: 1px solid #3b82f6;
+        }
 
     </style>
 </head>
@@ -184,8 +184,39 @@
     <script src="./config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
     <script>
+        // --- 專家級追蹤模組 (Session 優化版) ---
+        const Tracker = {
+            // 獲取或生成此人的 ID (存放在 localStorage 代表同一個裝置長期視為同一人)
+            getSessionID() {
+                let id = localStorage.getItem('tcu_user_id');
+                if (!id) {
+                    id = 'user_' + Math.random().toString(36).substr(2, 9) + Date.now();
+                    localStorage.setItem('tcu_user_id', id);
+                }
+                return id;
+            },
+            getTWTime() {
+                return new Intl.DateTimeFormat('zh-TW', {
+                    timeZone: 'Asia/Taipei',
+                    year: 'numeric', month: '2-digit', day: '2-digit',
+                    hour: '2-digit', minute: '2-digit', second: '2-digit',
+                    hour12: true
+                }).format(new Date());
+            },
+            async log(action, details = "") {
+                try {
+                    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    await client.from("user_activity_logs").insert({
+                        user_session_id: this.getSessionID(), // 綁定同一個 ID
+                        action_type: action,
+                        details: details,
+                        event_time_tw: this.getTWTime()
+                    });
+                } catch (e) { console.error("Log Error", e); }
+            }
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
-            // 建築物名稱對照表 (i18n)
             const BUILDING_NAMES_I18N = {
                 zh: {
                     "1": { "A": "和敬樓 A 棟", "B": "和敬樓 B 棟", "C": "和敬樓 C 棟", "D": "勤耕樓 D 棟", "E": "勤耕樓 E 棟", "F": "大捨樓 F 棟", "H": "福田樓 H 棟", "L": "大愛樓 L 棟", "T": "大喜館 T 棟" },
@@ -197,7 +228,6 @@
                 }
             };
 
-            // 介面文字語言包
             const I18N_DICT = {
                 zh: {
                     mainTitle: '校園尋路 <span style="color:var(--tech-blue)">慈大空間查詢平台</span>',
@@ -221,16 +251,18 @@
 
             const app = {
                 supabase: null, currentData: [], highlightID: null, sortCol: 'SpaceNo', sortDir: 1,
-                lang: localStorage.getItem('lang') || 'zh', // 預設語言
+                lang: localStorage.getItem('lang') || 'zh',
 
                 async init() {
                     this.supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
                     this.setupTheme(); 
-                    this.setupLanguage(); // 初始化語言
+                    this.setupLanguage();
                     this.setupOnlinePresence();
                     this.setupStats();
                     this.bindEvents();
                     this.loadFromURL();
+                    
+                    Tracker.log("ENTER", "進入首頁");
                 },
 
                 setupTheme() {
@@ -250,12 +282,10 @@
                     };
                 },
 
-                // 新增語言切換邏輯
                 setupLanguage() {
                     const langBtn = document.getElementById('lang-toggle');
                     const updateUI = () => {
                         const dict = I18N_DICT[this.lang];
-                        // 更新標題與靜態文字
                         document.getElementById('ui-main-title').innerHTML = dict.mainTitle;
                         document.getElementById('ui-online-label').textContent = dict.online;
                         document.getElementById('ui-visit-label').textContent = dict.visit;
@@ -263,8 +293,6 @@
                         document.getElementById('search-input').placeholder = dict.searchPlh;
                         document.getElementById('search-btn').textContent = dict.searchBtn;
                         langBtn.textContent = this.lang === 'zh' ? 'EN' : '中文';
-                        
-                        // 更新下拉選單與表格
                         this.renderFilters();
                         if (this.currentData.length > 0) this.sortAndRender();
                     };
@@ -304,9 +332,7 @@
                             .select('*', { count: 'exact', head: true });
 
                         if (!error) document.getElementById('visit-total').textContent = count || 0;
-                    } catch (e) { 
-                        console.log("Stats Loaded"); 
-                    }
+                    } catch (e) { console.log("Stats Loaded"); }
                 },
 
                 renderFilters() {
@@ -324,7 +350,11 @@
                 },
 
                 bindEvents() {
-                    const search = () => this.fetchData(document.getElementById('search-input').value);
+                    const search = () => {
+                        const kw = document.getElementById('search-input').value;
+                        Tracker.log("SEARCH", `關鍵字: ${kw || '(空)'}`);
+                        this.fetchData(kw);
+                    };
                     document.getElementById('search-btn').onclick = search;
                     document.getElementById('search-input').onkeypress = (e) => { if (e.key === 'Enter') search(); };
                     document.getElementById('reset-btn').onclick = () => { 
@@ -355,6 +385,10 @@
                             fc.style.scrollLeft = mc.scrollLeft;
                         } else { fc.style.display = "none"; }
                     };
+
+                    window.addEventListener('beforeunload', () => {
+                        Tracker.log("LEAVE", "關閉首頁");
+                    });
                 },
 
                 async fetchData(kw = "", hID = null) {
@@ -398,7 +432,7 @@
                             }
                             if (c === 'FloorNo' && v) v = `${v}${dict.floorUnit}`;
                             if (c === 'SpaceName' && row.PicNo) {
-                                return `<td><a href="Details.html?sID=${row.sID}&keyword=${encodeURIComponent(document.getElementById('search-input').value)}">${v}</a></td>`;
+                                return `<td><a href="Details.html?sID=${row.sID}&keyword=${encodeURIComponent(document.getElementById('search-input').value)}" onclick="Tracker.log('CLICK_LINK', '點擊空間: ${row.SpaceName}')">${v}</a></td>`;
                             }
                             return `<td>${v}</td>`;
                         }).join('');
