@@ -6,7 +6,6 @@
     <link rel="icon" href="TCUMAP/logo.png" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
-        /* --- 核心變數同步 (支援深色模式) --- */
         :root {
             --tech-blue: #007bff;
             --neon-glow: rgba(0, 123, 255, 0.5);
@@ -99,7 +98,7 @@
             content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
             background: rgba(0, 242, 254, 0.2);
             animation: scan 3s linear infinite;
-	    z-index: 0;
+            z-index: 0;
         }
         @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
 
@@ -162,9 +161,40 @@
     <script src="./config.js"></script> 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
     <script>
-        // --- 語言與深色模式初始化 ---
+        // --- 行為追蹤工具 (Session 優化版) ---
+        const Tracker = {
+            getSessionID() {
+                let id = localStorage.getItem('tcu_user_id');
+                if (!id) {
+                    id = 'user_' + Math.random().toString(36).substr(2, 9) + Date.now();
+                    localStorage.setItem('tcu_user_id', id);
+                }
+                return id;
+            },
+            getTWTime() {
+                return new Intl.DateTimeFormat('zh-TW', {
+                    timeZone: 'Asia/Taipei',
+                    year: 'numeric', month: '2-digit', day: '2-digit',
+                    hour: '2-digit', minute: '2-digit', second: '2-digit',
+                    hour12: true
+                }).format(new Date());
+            },
+            async log(action, details = "") {
+                try {
+                    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    await client.from("user_activity_logs").insert({
+                        user_session_id: this.getSessionID(),
+                        action_type: action,
+                        details: details,
+                        event_time_tw: this.getTWTime()
+                    });
+                } catch (e) { console.error("Log Error", e); }
+            }
+        };
+
         const currentLang = localStorage.getItem('lang') || 'zh';
-        
+        let currentSpaceName = "Unknown";
+
         function applyTheme() {
             if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
         }
@@ -254,17 +284,18 @@
         }
 
         function renderDetails(data) {
+            currentSpaceName = data.SpaceName || "Unknown";
             const kw = getParam('keyword') || "", sID = getParam('sID') || "";
             document.getElementById("back-button").href = `index.html?keyword=${encodeURIComponent(kw)}&highlightID=${encodeURIComponent(sID)}`;
             
-            // 更新靜態標籤文字
+            Tracker.log("VIEW_DETAIL", `查看空間: ${currentSpaceName} (${data.SpaceNo})`);
+
             document.getElementById("ui-back-text").textContent = dict.back;
             document.getElementById("lbl-campus").textContent = dict.campus;
             document.getElementById("lbl-space-no").textContent = dict.spaceNo;
             document.getElementById("lbl-space-name").textContent = dict.spaceName;
             document.getElementById("lbl-location").textContent = dict.location;
 
-            // 更新資料內容
             document.getElementById("detail-title").textContent = (data.SpaceName || "SPACE DETAIL").toUpperCase();
             document.getElementById("space-name").textContent = data.SpaceName;
             document.getElementById("campus-name").textContent = dict.campusMap[data.CampusNo] || data.CampusNo;
@@ -288,6 +319,11 @@
             const { data } = await client.from("TblSpace").select("*").eq("sID", sID).maybeSingle();
             if (data) renderDetails(data);
         }
+
+        window.addEventListener('beforeunload', () => {
+            Tracker.log("LEAVE", `離開詳細頁面: ${currentSpaceName}`);
+        });
+
         window.onload = load;
     </script>
 </body>
