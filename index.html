@@ -53,15 +53,15 @@
 
         #tour-popover {
             position: absolute; z-index: 10001;
-            width: 280px; background: var(--card-bg);
+            width: 260px; background: var(--card-bg);
             border: 1px solid var(--tech-blue); border-radius: 12px;
-            padding: 20px; pointer-events: auto;
+            padding: 15px; pointer-events: auto;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
         }
 
-        #tour-popover h3 { margin: 0 0 10px 0; color: var(--tech-blue); font-size: 1.1rem; }
-        #tour-popover p { margin: 0 0 20px 0; font-size: 0.9rem; line-height: 1.5; }
+        #tour-popover h3 { margin: 0 0 8px 0; color: var(--tech-blue); font-size: 1rem; }
+        #tour-popover p { margin: 0 0 15px 0; font-size: 0.85rem; line-height: 1.5; }
         
         .tour-footer { display: flex; justify-content: space-between; align-items: center; }
         .tour-step-info { font-size: 0.75rem; color: #718096; }
@@ -76,61 +76,111 @@
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--tech-blue); }
 
-        .main-content-wrapper { max-width: 100%; padding: 0 20px; margin: 20px auto; }
+        .main-content-wrapper { max-width: 1200px; padding: 0 15px; margin: 15px auto; }
 
         .header-bar { 
             display: flex; justify-content: space-between; align-items: center; 
-            margin-bottom: 20px; padding: 15px;
+            margin-bottom: 15px; padding: 12px;
             background: var(--glass-bg); backdrop-filter: blur(10px);
             border-radius: 12px; border: 1px solid var(--border-color);
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            flex-wrap: wrap; gap: 10px;
         }
         
         .header-bar h1 { 
-            display: flex; align-items: center; gap: 12px; 
-            font-size: 1.4rem; margin: 0; color: var(--text-main); letter-spacing: 1px; 
+            display: flex; align-items: center; gap: 10px; 
+            font-size: 1.1rem; margin: 0; color: var(--text-main); letter-spacing: 0.5px; 
         }
         
-        .header-logo { height: 40px; width: auto; object-fit: contain; }
+        .header-logo { height: 32px; width: auto; object-fit: contain; }
         
         .stat-tag { 
-            background: var(--card-bg); padding: 6px 14px; border-radius: 8px; 
-            font-size: 0.85rem; border: 1px solid var(--border-color);
-            color: var(--text-main); display: flex; align-items: center; justify-content: center;
+            background: var(--card-bg); padding: 4px 10px; border-radius: 8px; 
+            font-size: 0.75rem; border: 1px solid var(--border-color);
+            color: var(--text-main); display: flex; align-items: center;
         }
 
         .icon-btn { 
-            cursor: pointer; font-size: 1.1rem; width: 40px; height: 40px;
+            cursor: pointer; font-size: 1rem; width: 36px; height: 36px;
             border-radius: 50%; background: var(--card-bg);
             border: 1px solid var(--border-color);
             display: flex; align-items: center; justify-content: center;
             transition: all 0.3s;
         }
-        .icon-btn:hover { border-color: var(--tech-blue); transform: translateY(-2px); }
 
-        .search-bar { margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+        /* --- 搜尋列優化 --- */
+        .search-bar { margin-bottom: 20px; display: flex; gap: 8px; flex-direction: column; }
         .search-bar input, .search-bar select { 
-            padding: 10px 15px; border-radius: 8px; border: 1px solid var(--border-color); 
-            background: var(--card-bg); color: var(--text-main); outline: none;
+            width: 100%; box-sizing: border-box;
+            padding: 12px 15px; border-radius: 8px; border: 1px solid var(--border-color); 
+            background: var(--card-bg); color: var(--text-main); outline: none; font-size: 1rem;
         }
         
         .search-bar button { 
-            padding: 10px 20px; border-radius: 8px; border: none; 
+            padding: 12px; border-radius: 8px; border: none; 
             background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-            color: white; cursor: pointer; font-weight: 600; transition: 0.3s;
+            color: white; cursor: pointer; font-weight: 600; font-size: 1rem;
         }
 
-        .table-container { 
-            width: 100%; overflow-x: auto; background: var(--card-bg); 
-            border-radius: 12px; border: 1px solid var(--border-color);
+        /* --- 版本 1：手機卡片化 RWD --- */
+        .table-container { width: 100%; background: transparent; border: none; }
+        table { width: 100%; border-collapse: collapse; }
+
+        /* 電腦版維持表格樣式 */
+        @media (min-width: 769px) {
+            .search-bar { flex-direction: row; }
+            .search-bar input { flex: 2; }
+            .search-bar select { flex: 1; }
+            .header-bar h1 { font-size: 1.4rem; }
+            .table-container { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
+            th, td { text-align: center; padding: 15px 10px; border-bottom: 1px solid var(--border-color); }
+            th { background: var(--table-head); font-weight: 600; color: #718096; }
         }
-        table { width: 100%; min-width: 800px; border-collapse: collapse; table-layout: fixed; }
-        th, td { text-align: center; vertical-align: middle; padding: 15px 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        th { background: var(--table-head); cursor: pointer; font-weight: 600; color: #718096; border-bottom: 2px solid var(--border-color); }
-        tr:hover { background: rgba(0, 123, 255, 0.05); }
-        .highlight-row { background: rgba(0, 123, 255, 0.1) !important; font-weight: bold; }
+
+        /* 手機版轉換為卡片 */
+        @media (max-width: 768px) {
+            thead { display: none; } /* 隱藏表頭 */
+            
+            tr { 
+                display: block; 
+                background: var(--card-bg); 
+                margin-bottom: 15px; 
+                padding: 15px; 
+                border-radius: 12px; 
+                border: 1px solid var(--border-color);
+                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            }
+
+            td { 
+                display: flex; 
+                justify-content: space-between; 
+                align-items: center;
+                padding: 8px 0; 
+                border-bottom: 1px dashed var(--border-color);
+                text-align: right;
+                white-space: normal;
+                font-size: 0.95rem;
+            }
+
+            td:last-child { border-bottom: none; }
+
+            /* 顯示欄位名稱 */
+            td::before { 
+                content: attr(data-label); 
+                font-weight: 600; 
+                color: #718096; 
+                margin-right: 15px;
+                text-align: left;
+                flex-shrink: 0;
+            }
+
+            .highlight-row { border: 2px solid var(--tech-blue); }
+            
+            .header-bar { justify-content: center; }
+            .header-bar .controls { width: 100%; justify-content: center; display: flex; gap: 10px; }
+        }
+
         a { color: var(--tech-blue); text-decoration: none; font-weight: 600; }
     </style>
 </head>
@@ -155,27 +205,31 @@
         <div class="header-bar">
             <h1 id="ui-main-title">
                 <img src="TCUMAP/logo.png" alt="Logo" class="header-logo">
-                <span id="ui-main-title-text">校園尋路 <span style="color:var(--tech-blue)">慈大空間查詢平台</span></span>
+                <span id="ui-main-title-text">校園尋路 <span style="color:var(--tech-blue)">慈大空間平台</span></span>
             </h1>
-            <div style="display: flex; gap: 12px; align-items: center;">
-                <div id="tour-restart" class="icon-btn" title="Show Help">💡</div>
-                <div id="lang-toggle" class="icon-btn" title="Switch Language">EN</div>
-                <div id="theme-toggle" class="icon-btn" title="切換深淺模式">
+            <div class="controls" style="display: flex; gap: 8px; align-items: center;">
+                <div id="tour-restart" class="icon-btn" title="Help">💡</div>
+                <div id="lang-toggle" class="icon-btn" title="Language">EN</div>
+                <div id="theme-toggle" class="icon-btn" title="Theme">
                     <span id="theme-icon">🌙</span>
                 </div>
-                <div class="stat-tag"><span id="ui-online-label">在線人數</span>: <span id="online-count" style="color:var(--tech-blue); margin-left:5px;">1</span></div>
-                <div class="stat-tag"><span id="ui-visit-label">遊覽人數</span>: <span id="visit-total" style="margin-left:5px;">...</span></div>
+            </div>
+            <div style="display: flex; gap: 8px; width: 100%; justify-content: center; margin-top: 5px;">
+                <div class="stat-tag"><span id="ui-online-label">在線</span>: <span id="online-count" style="color:var(--tech-blue); margin-left:4px;">1</span></div>
+                <div class="stat-tag"><span id="ui-visit-label">造訪</span>: <span id="visit-total" style="margin-left:4px;">...</span></div>
             </div>
         </div>
 
-        <div id="status" style="font-size: 0.8rem; color: #718096; margin-bottom: 10px;">SYSTEM READY</div>
+        <div id="status" style="font-size: 0.75rem; color: #718096; margin-bottom: 8px; text-align: center;">SYSTEM READY</div>
 
         <div class="search-bar">
             <input type="text" id="search-input" placeholder="搜尋關鍵字或編號..." />
-            <select id="campus-filter"></select>
-            <select id="building-filter"></select>
+            <div style="display: flex; gap: 8px;">
+                <select id="campus-filter" style="flex: 1;"></select>
+                <select id="building-filter" style="flex: 1;"></select>
+            </div>
             <button id="search-btn">搜尋空間</button>
-            <button id="reset-btn" style="display:none; background: #e53e3e;">RESET</button>
+            <button id="reset-btn" style="display:none; background: #e53e3e;">重置搜尋</button>
         </div>
 
         <div class="table-container" id="table-container">
@@ -192,8 +246,8 @@
         // --- 語系字典 ---
         const I18N_DICT = {
             zh: { 
-                mainTitle: '校園尋路 <span style="color:var(--tech-blue)">慈大空間查詢平台</span>', 
-                online: '在線人數', visit: '遊覽人數', searchPlh: '搜尋關鍵字或編號...', 
+                mainTitle: '校園尋路 <span style="color:var(--tech-blue)">慈大空間平台</span>', 
+                online: '在線', visit: '造訪', searchPlh: '搜尋關鍵字或編號...', 
                 searchBtn: '搜尋空間', allCampus: '-- 所有校區 --', allBld: '-- 所有樓棟 --', 
                 bldUnit: ' 棟', campusMap: { '1': '中央校區', '2': '介仁校區', '3': '建國校區' }, 
                 colNames: { 'SpaceNo': '空間編號', 'SpaceName': '空間名稱', 'CampusNo': '校區', 'BuildingNo': '樓棟', 'FloorNo': '樓層', 'PicNo': '圖號' }, 
@@ -202,7 +256,7 @@
             },
             en: { 
                 mainTitle: 'Campus Wayfinding <span style="color:var(--tech-blue)">TCU Map</span>', 
-                online: 'Online', visit: 'Visits', searchPlh: 'Search ID or keywords...', 
+                online: 'Online', visit: 'Visits', searchPlh: 'Search ID...', 
                 searchBtn: 'Search', allCampus: '-- All Campus --', allBld: '-- All Buildings --', 
                 bldUnit: ' Bld', campusMap: { '1': 'Main Campus', '2': 'Jieren Campus', '3': 'Jianguo Campus' }, 
                 colNames: { 'SpaceNo': 'Space ID', 'SpaceName': 'Name', 'CampusNo': 'Campus', 'BuildingNo': 'Building', 'FloorNo': 'Floor', 'PicNo': 'Pic ID' }, 
@@ -211,34 +265,25 @@
             }
         };
 
-        // --- 教學導覽邏輯 ---
         const Onboarding = {
-            currentStep: 0,
-            lang: 'zh',
+            currentStep: 0, lang: 'zh',
             steps: {
                 zh: [
-                    { target: 'search-input', title: '快速搜尋', desc: '輸入編號（如 L0304）或關鍵字即可即時查找空間。' },
-                    { target: 'campus-filter', title: '校區篩選', desc: '從此處切換慈大中央、介仁或建國校區。' },
-                    { target: 'building-filter', title: '樓棟過濾', desc: '選擇特定教學大樓以縮小搜尋範圍。' },
-                    { target: 'lang-toggle', title: '語言切換', desc: '在此處切換中英文介面。' },
-                    { target: 'theme-toggle', title: '視覺風格', desc: '切換深色或淺色模式。' }
+                    { target: 'search-input', title: '快速搜尋', desc: '輸入編號（如 L0304）或關鍵字即可查找空間。' },
+                    { target: 'campus-filter', title: '校區篩選', desc: '從此處切換不同校區。' },
+                    { target: 'lang-toggle', title: '語言切換', desc: '在此處切換中英文介面。' }
                 ],
                 en: [
-                    { target: 'search-input', title: 'Search', desc: 'Type Space ID or keywords to find spaces.' },
-                    { target: 'campus-filter', title: 'Campus', desc: 'Switch between Main, Jieren, or Jianguo campus.' },
-                    { target: 'building-filter', title: 'Buildings', desc: 'Filter by specific building blocks.' },
-                    { target: 'lang-toggle', title: 'Language', desc: 'Toggle between EN and ZH.' },
-                    { target: 'theme-toggle', title: 'Theme', desc: 'Switch to Dark or Light mode.' }
+                    { target: 'search-input', title: 'Search', desc: 'Type Space ID or keywords.' },
+                    { target: 'campus-filter', title: 'Campus', desc: 'Switch between campuses.' },
+                    { target: 'lang-toggle', title: 'Language', desc: 'Toggle between EN and ZH.' }
                 ]
             },
             init(lang) {
                 this.lang = lang || 'zh';
                 if (localStorage.getItem('tcu_tour_done') === 'true') return;
-                
                 document.getElementById('tour-overlay').style.display = 'block';
                 this.render();
-
-                // 事件只需綁定一次
                 if (!this.isBound) {
                     document.getElementById('tour-next').onclick = () => this.next();
                     document.getElementById('tour-skip').onclick = () => this.finish();
@@ -247,20 +292,15 @@
             },
             render() {
                 if (document.getElementById('tour-overlay').style.display === 'none') return;
-
                 const config = this.steps[this.lang];
                 const step = config[this.currentStep];
                 const dict = I18N_DICT[this.lang];
                 const targetEl = document.getElementById(step.target);
-                
                 if (!targetEl) return this.next();
 
-                // 更新文字內容
                 document.getElementById('tour-title').innerText = step.title;
                 document.getElementById('tour-desc').innerText = step.desc;
                 document.getElementById('tour-step-count').innerText = `${this.currentStep + 1} / ${config.length}`;
-                
-                // 更新按鈕文字
                 document.getElementById('tour-next').innerText = (this.currentStep === config.length - 1) ? dict.tourDone : dict.tourNext;
                 document.getElementById('tour-skip').innerText = dict.tourSkip;
 
@@ -273,18 +313,14 @@
                 spotlight.style.left = `${rect.left - 5}px`;
                 spotlight.style.top = `${rect.top - 5}px`;
 
-                popover.style.left = `${Math.min(window.innerWidth - 300, Math.max(20, rect.left))}px`;
+                popover.style.left = `${Math.min(window.innerWidth - 280, Math.max(20, rect.left))}px`;
                 popover.style.top = `${rect.bottom + 15}px`;
                 targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
             },
             next() {
                 const config = this.steps[this.lang];
-                if (this.currentStep < config.length - 1) {
-                    this.currentStep++;
-                    this.render();
-                } else {
-                    this.finish();
-                }
+                if (this.currentStep < config.length - 1) { this.currentStep++; this.render(); } 
+                else { this.finish(); }
             },
             finish() {
                 document.getElementById('tour-overlay').style.display = 'none';
@@ -296,23 +332,15 @@
         const Tracker = {
             getSessionID() {
                 let id = localStorage.getItem('tcu_user_id');
-                if (!id) {
-                    id = 'user_' + Math.random().toString(36).substr(2, 9) + Date.now();
-                    localStorage.setItem('tcu_user_id', id);
-                }
+                if (!id) { id = 'user_' + Math.random().toString(36).substr(2, 9); localStorage.setItem('tcu_user_id', id); }
                 return id;
-            },
-            getTWTime() {
-                return new Intl.DateTimeFormat('zh-TW', {
-                    timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit',
-                    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
-                }).format(new Date());
             },
             async log(action, details = "") {
                 try {
                     const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
                     await client.from("user_activity_logs").insert({
-                        user_session_id: this.getSessionID(), action_type: action, details: details, event_time_tw: this.getTWTime()
+                        user_session_id: this.getSessionID(), action_type: action, details: details, 
+                        event_time_tw: new Date().toLocaleString('zh-TW', {timeZone:'Asia/Taipei'})
                     });
                 } catch (e) { }
             }
@@ -320,8 +348,8 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const BUILDING_NAMES_I18N = {
-                zh: { "1": { "A": "和敬樓 A 棟", "B": "和敬樓 B 棟", "C": "和敬樓 C 棟", "D": "勤耕樓 D 棟", "E": "勤耕樓 E 棟", "F": "大捨樓 F 棟", "H": "福田樓 H 棟", "L": "大愛樓 L 棟", "T": "大喜館 T 棟" }, "2": { "A": "合心樓 2A 棟", "B": "文心樓 2B 棟", "C": "立心樓 2C 棟", "D": "知心樓 2D 棟", "E": "明心樓 2E 棟", "G": "體育館 2G 棟", "H": "活動中心 2H 棟" } },
-                en: { "1": { "A": "Hejing Bldg A", "B": "Hejing Bldg B", "C": "Hejing Bldg C", "D": "Qingeng Bldg D", "E": "Qingeng Bldg E", "F": "Dashe Bldg F", "H": "Futian Bldg H", "L": "Daai Bldg L", "T": "Daxi Bldg T" }, "2": { "A": "Hexin Bldg 2A", "B": "Wenxin Bldg 2B", "C": "Lixin Bldg 2C", "D": "Zhixin Bldg 2D", "E": "Mingxin Bldg 2E", "G": "Gym 2G", "H": "Activity 2H" } }
+                zh: { "1": { "A": "和敬樓 A", "B": "和敬樓 B", "C": "和敬樓 C", "D": "勤耕樓 D", "E": "勤耕樓 E", "F": "大捨樓 F", "H": "福田樓 H", "L": "大愛樓 L", "T": "大喜館 T" }, "2": { "A": "合心樓 2A", "B": "文心樓 2B", "C": "立心樓 2C", "D": "知心樓 2D", "E": "明心樓 2E", "G": "體育館 2G", "H": "活動中心 2H" } },
+                en: { "1": { "A": "Hejing A", "B": "Hejing B", "C": "Hejing C", "D": "Qingeng D", "E": "Qingeng E", "F": "Dashe F", "H": "Futian H", "L": "Daai L", "T": "Daxi T" }, "2": { "A": "Hexin 2A", "B": "Wenxin 2B", "C": "Lixin 2C", "D": "Zhixin 2D", "E": "Mingxin 2E", "G": "Gym 2G", "H": "Activity 2H" } }
             };
 
             const app = {
@@ -336,21 +364,18 @@
                     this.setupStats();
                     this.bindEvents();
                     this.loadFromURL();
-                    Tracker.log("ENTER", "進入首頁");
-                    
-                    // 延遲啟動引導教學
+                    Tracker.log("ENTER", "HOME");
                     setTimeout(() => Onboarding.init(this.lang), 800);
                 },
 
                 setupTheme() {
-                    const toggleBtn = document.getElementById('theme-toggle');
                     const body = document.body;
                     const updateUI = (isDark) => {
                         body.classList.toggle('dark-mode', isDark);
                         document.getElementById('theme-icon').textContent = isDark ? '🔆' : '🌙';
                     };
                     if (localStorage.getItem('theme') === 'dark') updateUI(true);
-                    toggleBtn?.addEventListener('click', () => {
+                    document.getElementById('theme-toggle')?.addEventListener('click', () => {
                         const isNowDark = !body.classList.contains('dark-mode');
                         updateUI(isNowDark);
                         localStorage.setItem('theme', isNowDark ? 'dark' : 'light');
@@ -358,7 +383,6 @@
                 },
 
                 setupLanguage() {
-                    const langBtn = document.getElementById('lang-toggle');
                     const updateUI = () => {
                         const dict = I18N_DICT[this.lang];
                         document.getElementById('ui-main-title-text').innerHTML = dict.mainTitle;
@@ -367,16 +391,12 @@
                         document.getElementById('status').textContent = dict.systemReady;
                         document.getElementById('search-input').placeholder = dict.searchPlh;
                         document.getElementById('search-btn').textContent = dict.searchBtn;
-                        langBtn.textContent = this.lang === 'zh' ? 'EN' : '中文';
-                        
+                        document.getElementById('lang-toggle').textContent = this.lang === 'zh' ? 'EN' : '中文';
                         this.renderFilters();
                         if (this.currentData.length > 0) this.sortAndRender();
-
-                        // 同步引導教學語言
                         Onboarding.lang = this.lang;
-                        Onboarding.render();
                     };
-                    langBtn?.addEventListener('click', () => {
+                    document.getElementById('lang-toggle')?.addEventListener('click', () => {
                         this.lang = this.lang === 'zh' ? 'en' : 'zh';
                         localStorage.setItem('lang', this.lang);
                         updateUI();
@@ -385,18 +405,10 @@
                 },
 
                 bindEvents() {
-                    const search = () => {
-                        const kw = document.getElementById('search-input').value;
-                        Tracker.log("SEARCH", `關鍵字: ${kw || '(空)'}`);
-                        this.fetchData(kw);
-                    };
+                    const search = () => { this.fetchData(document.getElementById('search-input').value); };
                     document.getElementById('search-btn')?.addEventListener('click', search);
                     document.getElementById('search-input')?.addEventListener('keypress', (e) => { if (e.key === 'Enter') search(); });
-                    document.getElementById('reset-btn')?.addEventListener('click', () => { 
-                        this.highlightID = null; document.getElementById('search-input').value = "";
-                        window.location.href = window.location.pathname; 
-                    });
-                    
+                    document.getElementById('reset-btn')?.addEventListener('click', () => { window.location.href = window.location.pathname; });
                     document.getElementById("table-head-row")?.addEventListener('click', (e) => {
                         const th = e.target.closest('th');
                         if (th) {
@@ -405,12 +417,9 @@
                             this.sortAndRender();
                         }
                     });
-
-                    // 幫助按鈕事件
                     document.getElementById('tour-restart')?.addEventListener('click', () => {
                         localStorage.removeItem('tcu_tour_done');
-                        Onboarding.currentStep = 0;
-                        Onboarding.init(this.lang);
+                        Onboarding.currentStep = 0; Onboarding.init(this.lang);
                     });
                 },
 
@@ -420,7 +429,7 @@
                     if (kw) q = q.or(`SpaceName.ilike.%${kw}%,SpaceNo.ilike.%${kw}%`);
                     if (camp) q = q.eq('CampusNo', camp);
                     if (bld) q = q.or(`BuildingNo.eq.${bld},BuildingNo.eq.2${bld}`);
-                    const { data } = await q.limit(1000);
+                    const { data } = await q.limit(500);
                     this.currentData = data || [];
                     if (hID) this.highlightID = String(hID);
                     this.sortAndRender();
@@ -433,30 +442,34 @@
                     o.sort((a, b) => String(a[this.sortCol] || "").localeCompare(String(b[this.sortCol] || ""), undefined, { numeric: true }) * this.sortDir);
                     this.currentData = [...p, ...o];
                     const dict = I18N_DICT[this.lang];
-                    const h = colKeys.map(c => `<th data-col="${c}">${dict.colNames[c]}</th>`).join('');
-                    document.getElementById("table-head-row").innerHTML = h;
+                    
+                    document.getElementById("table-head-row").innerHTML = colKeys.map(c => `<th data-col="${c}">${dict.colNames[c]}</th>`).join('');
+                    
                     const rows = this.currentData.map(row => {
                         const isP = String(row.sID) === this.highlightID;
-                        const rowC = colKeys.map(c => {
+                        const rowCells = colKeys.map(c => {
                             let v = row[c] ?? "";
+                            const label = dict.colNames[c]; // 用於手機版顯示標籤
                             if (c === 'CampusNo') v = dict.campusMap[v] || v;
                             if (c === 'BuildingNo') {
                                 const m = BUILDING_NAMES_I18N[this.lang][row.CampusNo];
                                 v = m ? (m[v] || m[v.replace(/^2/,'')] || `${v}${dict.bldUnit}`) : (v ? `${v}${dict.bldUnit}` : "");
                             }
                             if (c === 'FloorNo' && v) v = `${v}${dict.floorUnit}`;
-                            if (c === 'SpaceName' && row.PicNo) return `<td><a href="Details.html?sID=${row.sID}&keyword=${encodeURIComponent(document.getElementById('search-input').value)}">${v}</a></td>`;
-                            return `<td>${v}</td>`;
+                            if (c === 'SpaceName' && row.PicNo) {
+                                return `<td data-label="${label}"><a href="Details.html?sID=${row.sID}&keyword=${encodeURIComponent(document.getElementById('search-input').value)}">${v}</a></td>`;
+                            }
+                            return `<td data-label="${label}">${v}</td>`;
                         }).join('');
-                        return `<tr class="${isP ? 'highlight-row' : ''}">${rowC}</tr>`;
+                        return `<tr class="${isP ? 'highlight-row' : ''}">${rowCells}</tr>`;
                     }).join('');
+                    
                     document.getElementById("space-tbody").innerHTML = rows;
-                    const rb = document.getElementById('reset-btn');
-                    if (rb) rb.style.display = 'inline-block';
+                    document.getElementById('reset-btn').style.display = 'inline-block';
                 },
 
                 setupOnlinePresence() {
-                    const channel = this.supabase.channel('online-users', { config: { presence: { key: 'user-' + Math.random().toString(36).substr(2, 9) } } });
+                    const channel = this.supabase.channel('online-users', { config: { presence: { key: 'u-' + Math.random().toString(36).substr(2, 5) } } });
                     channel.on('presence', { event: 'sync' }, () => {
                         const countEl = document.getElementById('online-count');
                         if (countEl) countEl.textContent = Object.keys(channel.presenceState()).length;
@@ -465,9 +478,6 @@
 
                 async setupStats() {
                     try {
-                        const res = await fetch('https://api.ipify.org?format=json');
-                        const { ip } = await res.json();
-                        await this.supabase.from('daily_page_views').upsert({ ip_address: ip }, { onConflict: 'ip_address,view_date' });
                         const { count } = await this.supabase.from('daily_page_views').select('*', { count: 'exact', head: true });
                         document.getElementById('visit-total').textContent = count || 0;
                     } catch (e) { }
@@ -479,17 +489,16 @@
                     Object.entries(dict.campusMap).forEach(([k, v]) => c += `<option value="${k}">${v}</option>`);
                     document.getElementById('campus-filter').innerHTML = c;
                     let b = `<option value="">${dict.allBld}</option>`;
-                    for (let i = 65; i <= 90; i++) {
-                        const char = String.fromCharCode(i);
-                        b += `<option value="${char}">${char}${dict.bldUnit}</option>`;
-                    }
+                    ['A','B','C','D','E','F','G','H','L','T'].forEach(char => b += `<option value="${char}">${char}${dict.bldUnit}</option>`);
                     document.getElementById('building-filter').innerHTML = b;
                 },
 
                 loadFromURL() {
                     const p = new URLSearchParams(window.location.search);
-                    this.fetchData(p.get('keyword') || "", p.get('highlightID'));
-                    document.getElementById('search-input').value = p.get('keyword') || "";
+                    if (p.get('keyword')) {
+                        document.getElementById('search-input').value = p.get('keyword');
+                        this.fetchData(p.get('keyword'), p.get('highlightID'));
+                    }
                 }
             };
             app.init();
